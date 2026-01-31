@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id       String @id @default(uuid())
+  email    String @unique
+  password String
+}
+
+model Cruise {
+  id            String   @id @default(uuid())
+  name          String
+  startDate     DateTime
+  endDate       DateTime
+  maxCapacity   Int
+  registered    Int      @default(0)
+  status        String   @default("PLANNED") // PLANNED, ACTIVE, COMPLETED, CANCELLED
+  rooms         Room[]
+  staff         Staff[]
+  activities    ActivityAssignment[]
+  revenue       TripRevenue?
+  bookings      RoomBooking[]
+}
+
+model Room {
+  id          String   @id @default(uuid())
+  type        String   // Deluxe, Normal
+  price       Float
+  capacity    Int
+  photo       String?
+  status      String   @default("AVAILABLE") // AVAILABLE, MAINTENANCE, UNAVAILABLE
+  description String?  // Maintenance details
+  cruiseId    String?
+  cruise      Cruise?  @relation(fields: [cruiseId], references: [id])
+  bookings    RoomBooking[]
+}
+
+model Activity {
+  id              String   @id @default(uuid())
+  name            String
+  description     String
+  managerName     String
+  managerContact  String
+  cost            Float
+  assignments     ActivityAssignment[]
+}
+
+model ActivityAssignment {
+  id         String   @id @default(uuid())
+  cruiseId   String
+  activityId String
+  day        Int
+  cruise     Cruise   @relation(fields: [cruiseId], references: [id])
+  activity   Activity @relation(fields: [activityId], references: [id])
+}
+
+model Staff {
+  id       String @id @default(uuid())
+  name     String
+  role     String // CLEANING, FOOD, EVENT
+  salary   Float
+  cruiseId String?
+  cruise   Cruise? @relation(fields: [cruiseId], references: [id])
+}
+
+model TripRevenue {
+  id           String @id @default(uuid())
+  cruiseId     String @unique
+  cruise       Cruise @relation(fields: [cruiseId], references: [id])
+  foodRevenue  Float  @default(0)
+  extraRevenue Float  @default(0)
+  totalRevenue Float  @default(0)
+}
+
+model RoomBooking {
+  id       String @id @default(uuid())
+  cruiseId String
+  roomId   String
+  count    Int
+  revenue  Float
+  cruise   Cruise @relation(fields: [cruiseId], references: [id])
+  room     Room   @relation(fields: [roomId], references: [id])
+}
