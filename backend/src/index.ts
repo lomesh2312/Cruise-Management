@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.routes';
 import { getDashboardStats, getMonthlyRevenue } from './controllers/dashboard.controller';
 import { getAllRooms, createRoom, updateRoom } from './controllers/room.controller';
-import { getAllCruiseTrips, getCruiseDetails, createCruise } from './controllers/cruise.controller';
+import { getAllCruiseTrips, getCruiseDetails, createCruise, createCruiseHistory } from './controllers/cruise.controller';
 import { getAllStaff, createStaff, removeStaff, updateStaff } from './controllers/staff.controller';
 import { getAllActivities, createActivity, updateActivity, deleteActivity } from './controllers/activity.controller';
 import { authMiddleware } from './middleware/auth';
@@ -35,6 +35,7 @@ app.put('/api/rooms/:id', updateRoom);
 
 // Cruises
 app.get('/api/cruises', getAllCruiseTrips);
+app.post('/api/cruises/history', createCruiseHistory);  // Specialized route for history
 app.get('/api/cruises/:id', getCruiseDetails);
 app.post('/api/cruises', createCruise);
 
