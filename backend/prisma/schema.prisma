@@ -26,6 +26,12 @@ model Cruise {
   activities    ActivityAssignment[]
   revenue       TripRevenue?
   bookings      RoomBooking[]
+
+  // Detailed passenger breakdown
+  passengersDeluxe       Int @default(0)
+  passengersPremiumGold  Int @default(0)
+  passengersPremiumSilver Int @default(0)
+  passengersNormal       Int @default(0)
 }
 
 model Room {
@@ -76,6 +82,12 @@ model TripRevenue {
   foodRevenue  Float  @default(0)
   extraRevenue Float  @default(0)
   totalRevenue Float  @default(0)
+  
+  // Expenses
+  cleaningStaffCost    Float @default(0)
+  foodStaffCost        Float @default(0)
+  externalActivityCost Float @default(0)
+  totalExpenses        Float @default(0)
 }
 
 model RoomBooking {
