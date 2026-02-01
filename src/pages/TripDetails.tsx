@@ -9,6 +9,7 @@ const TripDetails = () => {
     const { id } = useParams();
     const [cruise, setCruise] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [showDetails, setShowDetails] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -127,27 +128,88 @@ const TripDetails = () => {
                         </div>
                     </section>
 
-                    <section className="bg-gray-50 p-10 rounded-[2rem] space-y-8">
-                        <h2 className="text-2xl font-black uppercase tracking-tighter">Financial Summary</h2>
+                    <section className="bg-gray-50 dark:bg-gray-800 p-10 rounded-[2rem] space-y-8">
+                        <div className="flex justify-between items-start">
+                            <h2 className="text-2xl font-black uppercase tracking-tighter text-gray-900 dark:text-white">Financial Summary</h2>
+                            {(() => {
+                                const totalRevenue = cruise.revenue?.totalRevenue || 0;
+                                const totalExpenses = cruise.revenue?.totalExpenses || 0;
+                                const netResult = totalRevenue - totalExpenses;
+                                const isProfit = netResult >= 0;
 
-                        <div className="space-y-6">
-                            <div className="flex justify-between items-center pb-4 border-b border-gray-200">
-                                <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">Cabin Revenue</span>
-                                <span className="font-black text-black">${(cruise.revenue?.totalRevenue * 0.6 || 0).toLocaleString()}</span>
-                            </div>
-                            <div className="flex justify-between items-center pb-4 border-b border-gray-200">
-                                <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">Activities</span>
-                                <span className="font-black text-black">${(cruise.revenue?.totalRevenue * 0.2 || 0).toLocaleString()}</span>
-                            </div>
-                            <div className="flex justify-between items-center pb-4 border-b border-gray-200">
-                                <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">Food & Beverage</span>
-                                <span className="font-black text-black">${cruise.revenue?.foodRevenue.toLocaleString() || '0'}</span>
-                            </div>
-                            <div className="flex justify-between items-center pt-2">
-                                <span className="text-sm font-black text-black uppercase tracking-widest">Grand Total</span>
-                                <span className="text-2xl font-black text-black">${cruise.revenue?.totalRevenue.toLocaleString() || '0'}</span>
-                            </div>
+                                return (
+                                    <button
+                                        onClick={() => setShowDetails(!showDetails)}
+                                        className={`px-4 py-2 rounded-xl text-sm font-bold uppercase tracking-widest transition-all ${isProfit
+                                            ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                                            : 'bg-red-100 text-red-700 hover:bg-red-200'
+                                            }`}
+                                    >
+                                        {isProfit ? 'Success' : 'Loss'}
+                                    </button>
+                                );
+                            })()}
                         </div>
+
+                        {(() => {
+                            const totalRevenue = cruise.revenue?.totalRevenue || 0;
+                            const totalExpenses = cruise.revenue?.totalExpenses || 0;
+                            const netResult = totalRevenue - totalExpenses;
+                            const isProfit = netResult >= 0;
+
+                            return (
+                                <div className="space-y-6">
+                                    <div className="flex justify-between items-center pb-4 border-b border-gray-200 dark:border-gray-700">
+                                        <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">Total Revenue</span>
+                                        <span className="font-black text-black dark:text-white text-xl">${totalRevenue.toLocaleString()}</span>
+                                    </div>
+
+                                    <div className="flex justify-between items-center pb-4 border-b border-gray-200 dark:border-gray-700">
+                                        <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">Total Expenses</span>
+                                        <span className="font-black text-red-500 text-xl">-${totalExpenses.toLocaleString()}</span>
+                                    </div>
+
+                                    <div className="flex justify-between items-center pt-2">
+                                        <span className="text-sm font-black text-black dark:text-gray-200 uppercase tracking-widest">Net {isProfit ? 'Profit' : 'Loss'}</span>
+                                        <span className={`text-3xl font-black ${isProfit ? 'text-green-600' : 'text-red-600'}`}>
+                                            {isProfit ? '+' : ''}${netResult.toLocaleString()}
+                                        </span>
+                                    </div>
+
+                                    {showDetails && (
+                                        <div className="pt-6 mt-6 border-t border-gray-200 dark:border-gray-700 animate-in slide-in-from-top-4 fade-in duration-500">
+                                            <h3 className="text-sm font-bold text-black dark:text-white uppercase tracking-widest mb-4">Detailed Breakdown</h3>
+
+                                            <div className="space-y-3 pl-4 border-l-2 border-gray-200 dark:border-gray-700">
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="font-medium text-gray-500">Staff Cleaning Costs</span>
+                                                    <span className="font-bold text-red-400">-${(cruise.revenue?.cleaningStaffCost || 0).toLocaleString()}</span>
+                                                </div>
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="font-medium text-gray-500">Staff Food Costs</span>
+                                                    <span className="font-bold text-red-400">-${(cruise.revenue?.foodStaffCost || 0).toLocaleString()}</span>
+                                                </div>
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="font-medium text-gray-500">External Activities</span>
+                                                    <span className="font-bold text-red-400">-${(cruise.revenue?.externalActivityCost || 0).toLocaleString()}</span>
+                                                </div>
+                                                <div className="my-2 border-t border-dashed border-gray-200 dark:border-gray-700"></div>
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="font-medium text-gray-500">Ticket Revenue</span>
+                                                    <span className="font-bold text-green-500">+${(cruise.revenue?.totalRevenue || 0).toLocaleString()}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {!showDetails && (
+                                        <p className="text-center text-xs font-bold text-gray-400 mt-4 cursor-pointer hover:text-black dark:hover:text-white transition-colors" onClick={() => setShowDetails(true)}>
+                                            Click status badge or here to view details
+                                        </p>
+                                    )}
+                                </div>
+                            );
+                        })()}
                     </section>
                 </div>
             </div>
