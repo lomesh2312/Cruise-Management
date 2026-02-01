@@ -10,32 +10,35 @@ import TripHistory from './pages/TripHistory';
 import TripDetails from './pages/TripDetails';
 import CreateCruise from './pages/CreateCruise';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import './App.css';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<HomeLoader />} />
-          <Route path="/login" element={<Login />} />
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<HomeLoader />} />
+            <Route path="/login" element={<Login />} />
 
-          <Route element={<MainLayout />}>
-            <Route path="/dashboard" element={<DashboardOverview />} />
-            <Route path="/trips" element={<TripHistory />} />
-            <Route path="/cruises/:id" element={<TripDetails />} />
-            <Route path="/rooms" element={<RoomsManagement />} />
-            <Route path="/activities" element={<ActivitiesManagement />} />
-            <Route path="/staff" element={<StaffManagement />} />
-            <Route path="/create-cruise" element={<CreateCruise />} />
-            <Route path="/alerts" element={<Placeholder title="Alerts" />} />
-            <Route path="/settings" element={<Placeholder title="Settings" />} />
-          </Route>
+            <Route element={<MainLayout />}>
+              <Route path="/dashboard" element={<DashboardOverview />} />
+              <Route path="/trips" element={<TripHistory />} />
+              <Route path="/cruises/:id" element={<TripDetails />} />
+              <Route path="/rooms" element={<RoomsManagement />} />
+              <Route path="/activities" element={<ActivitiesManagement />} />
+              <Route path="/staff" element={<StaffManagement />} />
+              <Route path="/create-cruise" element={<CreateCruise />} />
+              <Route path="/alerts" element={<Placeholder title="Alerts" />} />
+              <Route path="/settings" element={<Placeholder title="Settings" />} />
+            </Route>
 
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </Router>
-    </AuthProvider>
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
@@ -53,9 +56,7 @@ const HomeLoader = () => {
       </a>
 
       <div id="video" className="absolute inset-0 opacity-40 grayscale pointer-events-none">
-        <video autoPlay muted loop playsInline className="w-full h-full object-cover">
-          <source src="https://media.istockphoto.com/id/1151603515/video/aerial-view-of-luxury-cruise-ship-sailing-to-port.mp4?s=mp4-640x640-is&k=20&c=p71XfXv1pXBv1v71T1X_9xL8z_v1I_v1I_v1I_v1I=" type="video/mp4" />
-        </video>
+        <img src="https://images.pexels.com/photos/813011/pexels-photo-813011.jpeg" alt="Cruise Ship" className="w-full h-full object-cover" />
       </div>
     </div>
   );

@@ -1,9 +1,11 @@
 import React from 'react';
-import { Bell, Moon, LayoutGrid, ChevronDown } from 'lucide-react';
+import { Bell, Moon, Sun, LayoutGrid, ChevronDown } from 'lucide-react'; // Added Sun
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext'; // Added import
 
 const Header = () => {
     const { admin } = useAuth();
+    const { theme, toggleTheme } = useTheme(); // Hook usage
 
     return (
         <header className="h-20 bg-transparent flex items-center justify-between px-8 sticky top-0 z-40">
@@ -12,9 +14,12 @@ const Header = () => {
             </div>
 
             <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 bg-white p-1 rounded-2xl shadow-sm border border-gray-50">
-                    <button className="p-2.5 text-gray-400 hover:text-black hover:bg-gray-50 rounded-xl transition-all">
-                        <Moon className="w-5 h-5 flex-shrink-0" />
+                <div className="flex items-center gap-1 bg-white dark:bg-gray-800 p-1 rounded-2xl shadow-sm border border-gray-50 dark:border-gray-700"> {/* Added dark mode classes */}
+                    <button
+                        onClick={toggleTheme}
+                        className="p-2.5 text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl transition-all"
+                    >
+                        {theme === 'light' ? <Moon className="w-5 h-5 flex-shrink-0" /> : <Sun className="w-5 h-5 flex-shrink-0" />}
                     </button>
                     <button className="p-2.5 text-black bg-gray-50/80 rounded-xl transition-all shadow-inner">
                         <LayoutGrid className="w-5 h-5 flex-shrink-0" />
