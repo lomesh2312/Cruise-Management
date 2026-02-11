@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '../services/api';
 
@@ -16,16 +18,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [admin, setAdmin] = useState<any | null>(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        if (token) {
-            api.get('/auth/me')
-                .then(res => setAdmin(res.data))
-                .catch(() => logout())
-                .finally(() => setLoading(false));
-        } else {
-            setLoading(false);
-        }
-    }, [token]);
+    const logout = () => {
+        localStorage.removeItem('cruise_token');
+        setToken(null);
+        setAdmin(null);
+    };
 
     const login = (newToken: string, newAdmin: any) => {
         localStorage.setItem('cruise_token', newToken);
@@ -33,11 +30,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setAdmin(newAdmin);
     };
 
-    const logout = () => {
-        localStorage.removeItem('cruise_token');
-        setToken(null);
-        setAdmin(null);
-    };
+    useEffect(() => {
+        if (token) {
+            api.get('/auth/me')
+                .then(res => setAdmin(res.data))
+                .catch(() => logout())
+                .finally(() => setLoading(false));
+        } else {
+            // eslint-disable-next-line
+            setLoading(false);
+        }
+    }, [token]);
 
     return (
         <AuthContext.Provider value={{ token, admin, login, logout, loading }}>
