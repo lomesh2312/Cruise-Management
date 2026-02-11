@@ -15,7 +15,7 @@ export const createActivity = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const updateActivity = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params as { id: string };
     const activity = await prisma.activity.update({
         where: { id },
         data: req.body
@@ -24,7 +24,7 @@ export const updateActivity = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const deleteActivity = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = req.params as { id: string };
     await prisma.activity.delete({ where: { id } });
     res.json({ message: 'Activity deleted' });
 });
