@@ -19,7 +19,7 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
         const decoded = jwt.verify(token, JWT_SECRET) as { adminId: string };
         req.adminId = decoded.adminId;
         next();
-    } catch (error) {
+    } catch {
         res.status(401).json({ message: 'Invalid or expired token' });
         return;
     }
