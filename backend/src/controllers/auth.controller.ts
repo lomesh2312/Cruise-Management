@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { AuthRequest } from '../middleware/auth';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../utils/prisma';
@@ -28,7 +29,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     });
 });
 
-export const getMe = asyncHandler(async (req: any, res: Response) => {
+export const getMe = asyncHandler(async (req: AuthRequest, res: Response) => {
     const admin = await prisma.admin.findUnique({
         where: { id: req.adminId },
         select: { id: true, email: true }
