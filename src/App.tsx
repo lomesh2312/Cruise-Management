@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './components/Layout/MainLayout';
 import DashboardOverview from './pages/DashboardOverview';
@@ -9,42 +9,44 @@ import ActivitiesManagement from './pages/ActivitiesManagement';
 import TripHistory from './pages/TripHistory';
 import TripDetails from './pages/TripDetails';
 import CreateCruise from './pages/CreateCruise';
+import GenerateTrip from './pages/GenerateTrip';
+import AddTripArchive from './pages/AddTripArchive';
 import { AuthProvider } from './context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext';
 import './App.css';
 
 function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<HomeLoader />} />
-            <Route path="/login" element={<Login />} />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomeLoader />} />
+          <Route path="/login" element={<Login />} />
 
-            <Route element={<MainLayout />}>
-              <Route path="/dashboard" element={<DashboardOverview />} />
-              <Route path="/trips" element={<TripHistory />} />
-              <Route path="/cruises/:id" element={<TripDetails />} />
-              <Route path="/rooms" element={<RoomsManagement />} />
-              <Route path="/activities" element={<ActivitiesManagement />} />
-              <Route path="/staff" element={<StaffManagement />} />
-              <Route path="/create-cruise" element={<CreateCruise />} />
-              <Route path="/alerts" element={<Placeholder title="Alerts" />} />
-              <Route path="/settings" element={<Placeholder title="Settings" />} />
-            </Route>
+          <Route element={<MainLayout />}>
+            <Route path="/dashboard" element={<DashboardOverview />} />
+            <Route path="/trips" element={<TripHistory />} />
+            <Route path="/cruises/:id" element={<TripDetails />} />
+            <Route path="/rooms" element={<RoomsManagement />} />
+            <Route path="/activities" element={<ActivitiesManagement />} />
+            <Route path="/staff" element={<StaffManagement />} />
+            <Route path="/staff" element={<StaffManagement />} />
+            <Route path="/create-cruise" element={<CreateCruise />} />
+            <Route path="/generate-trip" element={<GenerateTrip />} />
+            <Route path="/add-trip-archive" element={<AddTripArchive />} />
+            <Route path="/alerts" element={<Placeholder title="Alerts" />} />
+            <Route path="/settings" element={<Placeholder title="Settings" />} />
+          </Route>
 
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
-        </Router>
-      </AuthProvider>
-    </ThemeProvider>
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
-// Separate component for the Landing page logic requested by the user
+
 const HomeLoader = () => {
-  // If we want to keep the landing page:
+
   return (
     <div id="hero" className="min-h-screen bg-black text-white flex flex-col items-center justify-center relative overflow-hidden">
       <h1 className="text-7xl font-black tracking-tighter z-10 text-center mb-10 leading-none">OUR CRUISE<br />OUR PRIDE</h1>
@@ -56,16 +58,16 @@ const HomeLoader = () => {
       </a>
 
       <div id="video" className="absolute inset-0 opacity-40 grayscale pointer-events-none">
-        <img src="https://images.pexels.com/photos/813011/pexels-photo-813011.jpeg" alt="Cruise Ship" className="w-full h-full object-cover" />
+        <img src="https://images.unsplash.com/photo-1548574505-5e239809ee19?q=80&w=3064&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Cruise Background" className="w-full h-full object-cover" />
       </div>
     </div>
   );
 };
 
 const Placeholder = ({ title }: { title: string }) => (
-  <div className="bg-white border border-gray-100 p-20 rounded-3xl shadow-sm text-center">
-    <h1 className="text-4xl font-black tracking-tight mb-4">{title}</h1>
-    <p className="text-gray-400 font-medium">Developing this module for you...</p>
+  <div className="bg-[#2a2a2a] border border-[#3a3a3a] p-20 rounded-3xl shadow-sm text-center">
+    <h1 className="text-4xl font-black tracking-tight mb-4 text-[#e5e5e5]">{title}</h1>
+    <p className="text-[#a0a0a0] font-medium">Developing this module for you...</p>
   </div>
 );
 
