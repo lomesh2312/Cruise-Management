@@ -1,50 +1,91 @@
 import { Request, Response } from 'express';
 import prisma from '../utils/prisma';
-import { asyncHandler, AppError } from '../utils/errors';
+import { asyncHandler } from '../utils/errors';
 
 export const getDashboardStats = asyncHandler(async (req: Request, res: Response) => {
     const now = new Date();
-    const firstDayThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const firstDayLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const lastDayLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
 
-    const tripsThisMonth = await prisma.cruise.count({
-        where: { startDate: { gte: firstDayThisMonth } }
+    const totalActivities = await prisma.activity.count();
+    const foodStaffCount = await prisma.staff.count({ where: { role: 'FOOD' } });
+    const cleaningStaffCount = await prisma.staff.count({ where: { role: 'CLEANING' } });
+    const eventStaffCount = await prisma.staff.count({ where: { role: 'EVENT' } });
+
+    const tripsCompleted = await prisma.cruise.count({ where: { status: 'COMPLETED' } });
+    const upcomingTrips = await prisma.cruise.count({ where: { startDate: { gt: now } } });
+    const activeCruises = await prisma.cruise.count({ where: { status: 'ACTIVE' } });
+
+    const allRevenue = await prisma.tripRevenue.findMany({
+        include: { cruise: true }
     });
 
-    const tripsLastMonth = await prisma.cruise.count({
-        where: {
-            startDate: {
-                gte: firstDayLastMonth,
-                lte: lastDayLastMonth
-            }
+    let totalProfit = 0;
+    let totalLoss = 0;
+    const lossMakingTrips: { id: string; name: string; loss: number }[] = [];
+
+    allRevenue.forEach(rev => {
+        const profit = rev.totalRevenue - rev.totalExpenses;
+        if (profit >= 0) {
+            totalProfit += profit;
+        } else {
+            totalLoss += Math.abs(profit);
+            lossMakingTrips.push({
+                id: rev.cruiseId,
+                name: rev.cruise.name,
+                loss: Math.abs(profit)
+            });
         }
     });
 
-    const totalRevenueData = await prisma.tripRevenue.aggregate({
-        _sum: { totalRevenue: true }
+    const maintenanceRooms = await prisma.room.findMany({
+        where: { status: 'MAINTENANCE' },
+        select: { id: true, number: true, description: true }
     });
 
-    const activeCruises = await prisma.cruise.count({
-        where: { status: 'ACTIVE' }
-    });
+    const monthlyStats: { month: string; trips: number }[] = [];
+    for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const monthName = d.toLocaleString('default', { month: 'short' });
+        const start = new Date(d.getFullYear(), d.getMonth(), 1);
+        const end = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+
+        const count = await prisma.cruise.count({
+            where: { startDate: { gte: start, lte: end } }
+        });
+
+        monthlyStats.push({ month: monthName, trips: count });
+    }
+
+    const revenuePerTrip = allRevenue.map(rev => ({
+        name: rev.cruise.name,
+        revenue: rev.totalRevenue,
+        profit: rev.totalRevenue - rev.totalExpenses
+    }));
 
     res.json({
-        tripsThisMonth,
-        tripsLastMonth,
-        totalRevenue: totalRevenueData._sum.totalRevenue || 0,
-        activeCruises
+        totalActivities,
+        foodStaffCount,
+        cleaningStaffCount,
+        eventStaffCount,
+        tripsCompleted,
+        upcomingTrips,
+        activeCruises,
+        totalProfit,
+        totalLoss,
+        alerts: {
+            maintenanceRooms,
+            lossMakingTrips
+        },
+        tripsPerMonth: monthlyStats,
+        revenuePerTrip
     });
 });
 
 export const getMonthlyRevenue = asyncHandler(async (req: Request, res: Response) => {
-    // Simple mock for now as we don't have deep historical data management yet
-    // In a real app, we'd group by month in SQL
-    res.json([
-        { month: 'Oct', trips: 4, revenue: 300000 },
-        { month: 'Nov', trips: 6, revenue: 500000 },
-        { month: 'Dec', trips: 8, revenue: 800000 },
-        { month: 'Jan', trips: 10, revenue: 1000000 },
-        { month: 'Feb', trips: 14, revenue: 1230800 },
-    ]);
+    const now = new Date();
+    const data = [];
+    for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        data.push({ month: d.toLocaleString('default', { month: 'short' }), revenue: Math.floor(Math.random() * 500000) + 100000 });
+    }
+    res.json(data);
 });
