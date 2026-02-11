@@ -21,29 +21,61 @@ model Cruise {
   maxCapacity   Int
   registered    Int      @default(0)
   status        String   @default("PLANNED") // PLANNED, ACTIVE, COMPLETED, CANCELLED
+  isArchived    Boolean  @default(false)
+  // Locations
+  boardingLocation String   @default("Miami")
+  destination      String   @default("Bahamas")
+
   rooms         Room[]
   staff         Staff[]
   activities    ActivityAssignment[]
   revenue       TripRevenue?
   bookings      RoomBooking[]
 
+  // Total passengers
+  totalPassengers Int @default(0)
+
   // Detailed passenger breakdown
   passengersDeluxe       Int @default(0)
   passengersPremiumGold  Int @default(0)
   passengersPremiumSilver Int @default(0)
   passengersNormal       Int @default(0)
+
+  // Room booking counts
+  roomsBookedDeluxe       Int @default(0)
+  roomsBookedPremiumGold  Int @default(0)
+  roomsBookedPremiumSilver Int @default(0)
+  roomsBookedNormal       Int @default(0)
+
+  // Staff counts
+  cleaningStaffCount Int @default(0)
+  foodStaffCount     Int @default(0)
+  eventStaffCount    Int @default(0)
+}
+
+model RoomCategory {
+  id          String   @id @default(uuid())
+  name        String   @unique // Deluxe, Premium Gold, Premium Silver, Normal
+  price       Float
+  capacity    Int
+  images      String[] // Array of image URLs
+  features    String[] // Array of feature strings
+  rooms       Room[]
 }
 
 model Room {
-  id          String   @id @default(uuid())
-  type        String   // Deluxe, Normal
+  id          String        @id @default(uuid())
+  number      String?       // Room Number (e.g., A101)
+  type        String        // Kept for backward compatibility if needed, but rely on category
   price       Float
   capacity    Int
   photo       String?
-  status      String   @default("AVAILABLE") // AVAILABLE, MAINTENANCE, UNAVAILABLE
-  description String?  // Maintenance details
+  status      String        @default("AVAILABLE") // AVAILABLE, MAINTENANCE, UNAVAILABLE
+  description String?       // Maintenance details
   cruiseId    String?
-  cruise      Cruise?  @relation(fields: [cruiseId], references: [id])
+  categoryId  String?
+  category    RoomCategory? @relation(fields: [categoryId], references: [id])
+  cruise      Cruise?       @relation(fields: [cruiseId], references: [id])
   bookings    RoomBooking[]
 }
 
@@ -51,9 +83,12 @@ model Activity {
   id              String   @id @default(uuid())
   name            String
   description     String
+  type            String   @default("Solo") // Solo, Duo, Group
+  performerName   String?
   managerName     String
   managerContact  String
   cost            Float
+  images          String[] @default([])
   assignments     ActivityAssignment[]
 }
 
@@ -67,12 +102,12 @@ model ActivityAssignment {
 }
 
 model Staff {
-  id       String @id @default(uuid())
-  name     String
-  role     String // CLEANING, FOOD, EVENT
-  salary   Float
-  cruiseId String?
-  cruise   Cruise? @relation(fields: [cruiseId], references: [id])
+  id          String   @id @default(uuid())
+  name        String
+  role        String  // CLEANING, FOOD, EVENT
+  designation String  @default("Staff Member") // Specific role title
+  salary      Float
+  cruises     Cruise[]
 }
 
 model TripRevenue {
@@ -86,6 +121,7 @@ model TripRevenue {
   // Expenses
   cleaningStaffCost    Float @default(0)
   foodStaffCost        Float @default(0)
+  eventStaffCost       Float @default(0)
   externalActivityCost Float @default(0)
   totalExpenses        Float @default(0)
 }

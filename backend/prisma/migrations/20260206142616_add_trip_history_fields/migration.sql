@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE "Cruise" ADD COLUMN     "cleaningStaffCount" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "foodStaffCount" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "roomsBookedDeluxe" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "roomsBookedNormal" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "roomsBookedPremiumGold" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "roomsBookedPremiumSilver" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "totalPassengers" INTEGER NOT NULL DEFAULT 0;
