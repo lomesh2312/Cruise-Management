@@ -3,7 +3,6 @@ import {
     Search, Loader2, Image as ImageIcon, Check, X, Trash2, Edit2
 } from 'lucide-react';
 import api from '../services/api';
-
 interface Room {
     id: string;
     number: string;
@@ -12,7 +11,6 @@ interface Room {
     capacity: number;
     description: string;
 }
-
 interface Category {
     id: string;
     name: string;
@@ -22,33 +20,26 @@ interface Category {
     price: number;
     capacity: number;
 }
-
 const RoomsManagement = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [activeTab, setActiveTab] = useState<string>('');
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
 
-
     const [isEditingImages, setIsEditingImages] = useState(false);
     const [isEditingFeatures, setIsEditingFeatures] = useState(false);
-    const [isEditingSettings, setIsEditingSettings] = useState(false); 
-
+    const [isEditingSettings, setIsEditingSettings] = useState(false);
     const [tempImages, setTempImages] = useState<string[]>([]);
     const [tempFeatures, setTempFeatures] = useState<string[]>([]);
 
-
     const [tempPrice, setTempPrice] = useState<number>(0);
     const [tempCapacity, setTempCapacity] = useState<number>(0);
-
     const [newImageInput, setNewImageInput] = useState('');
     const [newFeatureInput, setNewFeatureInput] = useState('');
-
 
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
     const [maintenanceReason, setMaintenanceReason] = useState('');
     const [isMaintenanceModalOpen, setIsMaintenanceModalOpen] = useState(false);
-
     const [isAddRoomModalOpen, setIsAddRoomModalOpen] = useState(false);
     const [bulkAddData, setBulkAddData] = useState({
         startNumber: 101,
@@ -56,7 +47,6 @@ const RoomsManagement = () => {
         prefix: ''
     });
     const [isAddingBulk, setIsAddingBulk] = useState(false);
-
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -74,11 +64,8 @@ const RoomsManagement = () => {
             }
         };
         fetchCategories();
-
     }, [activeTab]);
-
     const activeCategory = categories.find(c => c.id === activeTab);
-
 
     useEffect(() => {
         if (activeCategory) {
@@ -89,8 +76,6 @@ const RoomsManagement = () => {
             setIsEditingFeatures(false);
         }
     }, [activeCategory]);
-
-
 
     const saveSettings = async () => {
         if (!activeCategory) return;
@@ -108,13 +93,11 @@ const RoomsManagement = () => {
         }
     };
 
-
     const startEditingImages = () => {
         if (!activeCategory) return;
         setTempImages([...activeCategory.images]);
         setIsEditingImages(true);
     };
-
     const saveImages = async () => {
         if (!activeCategory) return;
         try {
@@ -129,25 +112,21 @@ const RoomsManagement = () => {
             alert('Failed to save images');
         }
     };
-
     const addImage = () => {
         if (newImageInput && tempImages.length < 6) {
             setTempImages([...tempImages, newImageInput]);
             setNewImageInput('');
         }
     };
-
     const removeImage = (index: number) => {
         setTempImages(tempImages.filter((_, i) => i !== index));
     };
-
 
     const startEditingFeatures = () => {
         if (!activeCategory) return;
         setTempFeatures([...activeCategory.features]);
         setIsEditingFeatures(true);
     };
-
     const saveFeatures = async () => {
         if (!activeCategory) return;
         try {
@@ -162,36 +141,30 @@ const RoomsManagement = () => {
             alert('Failed to save features');
         }
     };
-
     const addFeature = () => {
         if (newFeatureInput) {
             setTempFeatures([...tempFeatures, newFeatureInput]);
             setNewFeatureInput('');
         }
     };
-
     const removeFeature = (index: number) => {
         setTempFeatures(tempFeatures.filter((_, i) => i !== index));
     };
-
 
     const openRoomModal = (room: Room) => {
         setSelectedRoom(room);
         setMaintenanceReason('');
         setIsMaintenanceModalOpen(true);
     };
-
     const updateRoomDetails = async (status: string, overrideNumber?: string) => {
         if (!selectedRoom) return;
         try {
             const newNumber = overrideNumber || selectedRoom.number;
-
             await api.put(`/rooms/${selectedRoom.id}`, {
                 status,
                 number: newNumber,
                 description: status === 'MAINTENANCE' ? maintenanceReason : undefined
             });
-
 
             const updatedCategories = categories.map(cat => {
                 if (cat.rooms.some(r => r.id === selectedRoom.id)) {
@@ -211,7 +184,6 @@ const RoomsManagement = () => {
         }
     };
 
-
     const addBulkRooms = async () => {
         if (!activeCategory) return;
         setIsAddingBulk(true);
@@ -226,7 +198,6 @@ const RoomsManagement = () => {
                 });
                 newRooms.push(res.data);
             }
-
             const updatedCategories = categories.map(cat => {
                 if (cat.id === activeCategory.id) {
                     return {
@@ -250,7 +221,6 @@ const RoomsManagement = () => {
             setIsAddingBulk(false);
         }
     };
-
     const deleteRoom = async (e: React.MouseEvent, roomId: string) => {
         e.stopPropagation();
         if (!confirm('Are you sure you want to delete this room?')) return;
@@ -267,28 +237,23 @@ const RoomsManagement = () => {
         }
     };
 
-
     if (loading) return (
         <div className="h-[60vh] flex items-center justify-center">
             <Loader2 className="w-8 h-8 animate-spin text-[#e5e5e5]" />
         </div>
     );
-
     if (!activeCategory) return <div>No categories found.</div>;
-
     const filteredRooms = activeCategory.rooms.filter(room =>
         (room.number || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
-
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
-            
+
             <div>
                 <h1 className="text-3xl font-black tracking-tight text-[#e5e5e5]">Room Management</h1>
                 <p className="text-[#a0a0a0] font-medium text-sm mt-1">Manage room categories, images, features, pricing, and inventory.</p>
             </div>
 
-            
             <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
                 {categories.map(cat => (
                     <button
@@ -304,10 +269,8 @@ const RoomsManagement = () => {
                 ))}
             </div>
 
-            
             <div className="space-y-8">
 
-                
                 <div className="bg-[#2a2a2a] p-6 rounded-[32px] border border-[#3a3a3a] shadow-sm">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-3">
@@ -355,7 +318,6 @@ const RoomsManagement = () => {
                 </div>
 
 
-                
                 <div className="bg-[#2a2a2a] p-6 rounded-[32px] border border-[#3a3a3a] shadow-sm">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-3">
@@ -375,7 +337,6 @@ const RoomsManagement = () => {
                             </button>
                         )}
                     </div>
-
                     {isEditingImages ? (
                         <div className="space-y-4">
                             <div className="flex gap-2">
@@ -423,7 +384,6 @@ const RoomsManagement = () => {
                     )}
                 </div>
 
-                
                 <div className="bg-[#2a2a2a] p-6 rounded-[32px] border border-[#3a3a3a] shadow-sm">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-3">
@@ -443,7 +403,6 @@ const RoomsManagement = () => {
                             </button>
                         )}
                     </div>
-
                     {isEditingFeatures ? (
                         <div className="space-y-4">
                             <div className="flex gap-2">
@@ -480,7 +439,6 @@ const RoomsManagement = () => {
                     )}
                 </div>
 
-                
                 <div className="bg-[#2a2a2a] p-6 rounded-[32px] border border-[#3a3a3a] shadow-sm">
                     <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
                         <div className="flex flex-col gap-1">
@@ -495,7 +453,6 @@ const RoomsManagement = () => {
                                 </div>
                             </div>
                         </div>
-
                         <div className="flex flex-wrap items-center gap-3">
                             <div className="relative w-full md:w-64">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#a0a0a0]" />
@@ -515,7 +472,6 @@ const RoomsManagement = () => {
                             </button>
                         </div>
                     </div>
-
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
                         {filteredRooms.map(room => (
                             <div
@@ -534,7 +490,6 @@ const RoomsManagement = () => {
                                 </button>
                                 <span className={`block text-xl font-black group-hover:scale-110 transition-transform ${room.status === 'MAINTENANCE' ? 'text-red-900' : 'text-[#e5e5e5]'
                                     }`}>{room.number}</span>
-
                                 <div className="mt-2 flex flex-col items-center gap-1">
                                     <span className={`inline-block px-3 py-1 text-[9px] font-black rounded-full uppercase tracking-widest ${room.status === 'MAINTENANCE' ? 'bg-red-100 text-red-700' : 'bg-[#e5e5e5]/10 text-[#e5e5e5]'
                                         }`}>
@@ -548,10 +503,8 @@ const RoomsManagement = () => {
                         <div className="text-center py-10 text-[#a0a0a0] font-medium">No rooms found.</div>
                     )}
                 </div>
-
             </div>
 
-            
             {isMaintenanceModalOpen && selectedRoom && (
                 <div className="fixed inset-0 bg-[#b8935e]/50 flex items-center justify-center p-4 z-50 backdrop-blur-sm animate-in fade-in duration-200">
                     <div className="bg-[#2a2a2a] rounded-[32px] p-8 w-full max-w-md shadow-2xl scale-100 animate-in zoom-in-95 duration-200">
@@ -561,7 +514,6 @@ const RoomsManagement = () => {
                                 <X className="w-5 h-5 text-gray-600" />
                             </button>
                         </div>
-
                         <div className="space-y-6">
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-2">Room Number (Rename)</label>
@@ -572,7 +524,6 @@ const RoomsManagement = () => {
                                     id="roomNumberInput"
                                 />
                             </div>
-
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-2">Room Status</label>
                                 <div className="grid grid-cols-2 gap-3">
@@ -599,7 +550,6 @@ const RoomsManagement = () => {
                                     </button>
                                 </div>
                             </div>
-
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-2">Maintenance Reason</label>
                                 <textarea
@@ -610,7 +560,6 @@ const RoomsManagement = () => {
                                 />
                                 <p className="text-xs text-[#a0a0a0] mt-2 font-medium">Required if setting to Maintenance.</p>
                             </div>
-
                             <button
                                 onClick={() => {
                                     const val = (document.getElementById('roomNumberInput') as HTMLInputElement).value;
@@ -621,7 +570,6 @@ const RoomsManagement = () => {
                             >
                                 Update & Set Maintenance
                             </button>
-
                             {selectedRoom.status !== 'MAINTENANCE' && (
                                 <button
                                     onClick={() => {
@@ -638,7 +586,6 @@ const RoomsManagement = () => {
                 </div>
             )}
 
-            
             {isAddRoomModalOpen && (
                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50 backdrop-blur-sm animate-in fade-in duration-200">
                     <div className="bg-[#2a2a2a] rounded-[40px] p-10 w-full max-w-md shadow-2xl border border-[#3a3a3a] animate-in zoom-in-95 duration-300">
@@ -651,7 +598,6 @@ const RoomsManagement = () => {
                                 <X className="w-6 h-6 text-[#e5e5e5]" />
                             </button>
                         </div>
-
                         <div className="space-y-6">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
@@ -674,7 +620,6 @@ const RoomsManagement = () => {
                                     />
                                 </div>
                             </div>
-
                             <div>
                                 <label className="block text-[10px] font-black text-[#a0a0a0] uppercase tracking-[0.2em] mb-3">How many rooms?</label>
                                 <input
@@ -686,7 +631,6 @@ const RoomsManagement = () => {
                                     onChange={e => setBulkAddData({ ...bulkAddData, count: parseInt(e.target.value) || 1 })}
                                 />
                             </div>
-
                             <button
                                 onClick={addBulkRooms}
                                 disabled={isAddingBulk || bulkAddData.count < 1}
@@ -708,5 +652,4 @@ const RoomsManagement = () => {
         </div>
     );
 };
-
 export default RoomsManagement;

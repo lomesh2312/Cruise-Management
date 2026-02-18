@@ -94,12 +94,6 @@ export const deleteRoom = asyncHandler(async (req: Request, res: Response) => {
     });
 
     if (bookings.length > 0) {
-        
-        
-        
-        
-        
-        
         await prisma.roomBooking.deleteMany({ where: { roomId: id } });
     }
 

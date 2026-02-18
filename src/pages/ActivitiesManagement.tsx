@@ -5,7 +5,6 @@ import {
 } from 'lucide-react';
 import api from '../services/api';
 import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
-
 interface Activity {
     id: string;
     name: string;
@@ -17,7 +16,6 @@ interface Activity {
     cost: number;
     images: string[];
 }
-
 const ActivitiesManagement = () => {
     const [activities, setActivities] = useState<Activity[]>([]);
     const [loading, setLoading] = useState(true);
@@ -27,10 +25,8 @@ const ActivitiesManagement = () => {
     const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
     const [formError, setFormError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [activityToDelete, setActivityToDelete] = useState<string | null>(null);
-
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -41,13 +37,10 @@ const ActivitiesManagement = () => {
         cost: 0,
         images: [] as string[]
     });
-
     const [newImageUrl, setNewImageUrl] = useState('');
-
     useEffect(() => {
         fetchActivities();
     }, []);
-
     const fetchActivities = async () => {
         try {
             const res = await api.get('/activities');
@@ -58,12 +51,10 @@ const ActivitiesManagement = () => {
             setLoading(false);
         }
     };
-
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
-
     const handleAddClick = () => {
         setFormData({
             name: '',
@@ -78,7 +69,6 @@ const ActivitiesManagement = () => {
         setFormError(null);
         setIsAddModalOpen(true);
     };
-
     const handleEditClick = (activity: Activity) => {
         setSelectedActivity(activity);
         setFormData({
@@ -94,7 +84,6 @@ const ActivitiesManagement = () => {
         setFormError(null);
         setIsEditModalOpen(true);
     };
-
     const handleImageManageClick = (activity: Activity) => {
         setSelectedActivity(activity);
         setFormData({
@@ -103,18 +92,15 @@ const ActivitiesManagement = () => {
         });
         setIsImageModalOpen(true);
     };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setFormError(null);
         setIsSubmitting(true);
-
         try {
             const payload = {
                 ...formData,
                 cost: Number(formData.cost)
             };
-
             if (isAddModalOpen) {
                 await api.post('/activities', payload);
             } else if (isEditModalOpen && selectedActivity) {
@@ -129,12 +115,10 @@ const ActivitiesManagement = () => {
             setIsSubmitting(false);
         }
     };
-
     const handleDeleteClick = (id: string) => {
         setActivityToDelete(id);
         setDeleteModalOpen(true);
     };
-
     const confirmDelete = async () => {
         if (!activityToDelete) return;
         try {
@@ -146,7 +130,6 @@ const ActivitiesManagement = () => {
             alert('Failed to delete activity');
         }
     };
-
     const addImageUrl = () => {
         if (!newImageUrl.trim()) return;
         setFormData(prev => ({
@@ -155,14 +138,12 @@ const ActivitiesManagement = () => {
         }));
         setNewImageUrl('');
     };
-
     const removeImageUrl = (index: number) => {
         setFormData(prev => ({
             ...prev,
             images: prev.images.filter((_, i) => i !== index)
         }));
     };
-
     const updateImages = async () => {
         if (!selectedActivity) return;
         setIsSubmitting(true);
@@ -177,7 +158,6 @@ const ActivitiesManagement = () => {
             setIsSubmitting(false);
         }
     };
-
     const getTypeIcon = (type: string) => {
         switch (type) {
             case 'Solo': return <UserCheck className="w-4 h-4" />;
@@ -186,16 +166,13 @@ const ActivitiesManagement = () => {
             default: return <Info className="w-4 h-4" />;
         }
     };
-
     if (loading) return (
         <div className="h-[60vh] flex items-center justify-center">
             <Loader2 className="w-8 h-8 animate-spin text-[#e5e5e5]" />
         </div>
     );
-
     return (
         <div className="space-y-8 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-700">
-
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-black tracking-tight text-[#e5e5e5] border-l-4 border-[#b8935e] pl-4">Activities Management</h1>
@@ -209,11 +186,9 @@ const ActivitiesManagement = () => {
                 </button>
             </div>
 
-
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {activities.map((activity) => (
                     <div key={activity.id} className="bg-[#2a2a2a] border border-[#3a3a3a] rounded-[40px] shadow-sm hover:shadow-2xl hover:translate-y-[-4px] transition-all relative overflow-hidden group/card flex flex-col md:flex-row h-full min-h-[320px]">
-
 
                         <div className="w-full md:w-2/5 relative h-48 md:h-auto overflow-hidden bg-[#333333]">
                             {activity.images && activity.images.length > 0 ? (
@@ -236,13 +211,11 @@ const ActivitiesManagement = () => {
                                 </button>
                             </div>
 
-
                             <div className="absolute top-4 left-4 bg-[#2a2a2a]/90 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-2 shadow-sm border border-white/50">
                                 <span className="text-[#e5e5e5]">{getTypeIcon(activity.type)}</span>
                                 <span className="text-[10px] font-black uppercase tracking-widest text-[#e5e5e5]">{activity.type}</span>
                             </div>
                         </div>
-
 
                         <div className="flex-1 p-8 flex flex-col justify-between">
                             <div className="space-y-4">
@@ -270,7 +243,6 @@ const ActivitiesManagement = () => {
                                 </div>
                                 <p className="text-gray-500 font-medium text-sm leading-relaxed line-clamp-3">{activity.description}</p>
                             </div>
-
                             <div className="mt-8 space-y-6">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-1">
@@ -292,7 +264,6 @@ const ActivitiesManagement = () => {
                                         </div>
                                     </div>
                                 </div>
-
                                 <div className="flex items-center justify-between pt-6 border-t border-gray-50">
                                     <div>
                                         <p className="text-[10px] font-black uppercase tracking-widest text-[#a0a0a0] mb-1">Standard Cost</p>
@@ -310,7 +281,6 @@ const ActivitiesManagement = () => {
                     </div>
                 ))}
             </div>
-
             {activities.length === 0 && (
                 <div className="h-96 flex flex-col items-center justify-center bg-[#333333] rounded-[40px] border-2 border-dashed border-[#3a3a3a]">
                     <Music className="w-16 h-16 text-gray-200 mb-4" />
@@ -318,7 +288,6 @@ const ActivitiesManagement = () => {
                     <button onClick={handleAddClick} className="mt-4 text-[#e5e5e5] font-black text-xs underline uppercase tracking-widest">Create Activity</button>
                 </div>
             )}
-
 
             {(isAddModalOpen || isEditModalOpen) && (
                 <div className="fixed inset-0 bg-[#b8935e]/60 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
@@ -330,7 +299,6 @@ const ActivitiesManagement = () => {
                             </div>
                             <button onClick={() => { setIsAddModalOpen(false); setIsEditModalOpen(false); }} className="p-3 hover:bg-gray-100 rounded-full text-[#a0a0a0] hover:text-[#e5e5e5] transition-colors"><X className="w-6 h-6" /></button>
                         </div>
-
                         <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
                             {formError && (
                                 <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3 animate-in shake duration-500">
@@ -338,7 +306,6 @@ const ActivitiesManagement = () => {
                                     <p className="text-sm font-bold text-red-600">{formError}</p>
                                 </div>
                             )}
-
                             <form onSubmit={handleSubmit} className="space-y-8">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
@@ -354,17 +321,14 @@ const ActivitiesManagement = () => {
                                         </select>
                                     </div>
                                 </div>
-
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-[#a0a0a0] ml-1">Performer / Group Name</label>
                                     <input name="performerName" value={formData.performerName} onChange={handleInputChange} className="w-full px-6 py-4 bg-[#333333] rounded-2xl font-bold text-[#e5e5e5] border-none focus:ring-4 focus:ring-black/5" placeholder="e.g. The Midnight Trio" />
                                 </div>
-
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-[#a0a0a0] ml-1">Activity Description</label>
                                     <textarea required name="description" value={formData.description} onChange={handleInputChange} className="w-full px-6 py-4 bg-[#333333] rounded-2xl font-bold text-[#e5e5e5] border-none focus:ring-4 focus:ring-black/5 h-32 resize-none" placeholder="Describe the entertainment style and requirements..." />
                                 </div>
-
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black uppercase tracking-widest text-[#a0a0a0] ml-1">Manager Name</label>
@@ -375,12 +339,10 @@ const ActivitiesManagement = () => {
                                         <input required name="managerContact" value={formData.managerContact} onChange={handleInputChange} className="w-full px-6 py-4 bg-[#333333] rounded-2xl font-bold text-[#e5e5e5] border-none focus:ring-4 focus:ring-black/5" placeholder="Phone number" />
                                     </div>
                                 </div>
-
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-[#a0a0a0] ml-1">Standard Cost ($)</label>
                                     <input required type="number" min="0" name="cost" value={formData.cost} onChange={handleInputChange} className="w-full px-6 py-4 bg-[#333333] rounded-2xl font-black text-2xl text-[#e5e5e5] border-none focus:ring-4 focus:ring-black/5" placeholder="0" />
                                 </div>
-
                                 <div className="flex justify-end gap-4 pt-4">
                                     <button
                                         type="button"
@@ -402,7 +364,6 @@ const ActivitiesManagement = () => {
                     </div>
                 </div>
             )}
-
             {isImageModalOpen && selectedActivity && (
                 <div className="fixed inset-0 bg-[#b8935e]/60 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
                     <div className="bg-[#2a2a2a] w-full max-w-3xl rounded-[40px] shadow-2xl overflow-hidden animate-in scale-in duration-300 max-h-[90vh] flex flex-col">
@@ -413,9 +374,7 @@ const ActivitiesManagement = () => {
                             </div>
                             <button onClick={() => setIsImageModalOpen(false)} className="p-3 hover:bg-gray-100 rounded-full text-[#a0a0a0] hover:text-[#e5e5e5] transition-colors"><X className="w-6 h-6" /></button>
                         </div>
-
                         <div className="flex-1 overflow-y-auto p-8 custom-scrollbar space-y-8">
-
                             <div className="space-y-3">
                                 <label className="text-[10px] font-black uppercase tracking-widest text-[#a0a0a0] ml-1">Paste New Image URL</label>
                                 <div className="flex gap-4">
@@ -435,7 +394,6 @@ const ActivitiesManagement = () => {
                                     </button>
                                 </div>
                             </div>
-
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {formData.images.map((img, index) => (
@@ -459,7 +417,6 @@ const ActivitiesManagement = () => {
                                 )}
                             </div>
                         </div>
-
                         <div className="p-8 border-t border-[#3a3a3a] flex justify-end gap-4">
                             <button
                                 onClick={() => setIsImageModalOpen(false)}
@@ -478,7 +435,6 @@ const ActivitiesManagement = () => {
                     </div>
                 </div>
             )}
-
             <DeleteConfirmationModal
                 isOpen={deleteModalOpen}
                 onClose={() => setDeleteModalOpen(false)}
@@ -489,6 +445,5 @@ const ActivitiesManagement = () => {
         </div>
     );
 };
-
 export default ActivitiesManagement;
 

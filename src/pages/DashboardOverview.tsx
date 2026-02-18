@@ -123,7 +123,7 @@ const DashboardOverview = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {cards.map((card, i) => {
                     const Content = (
                         <div key={i} className="bg-[#2a2a2a] p-6 rounded-[24px] shadow-sm border border-[#3a3a3a] flex flex-col justify-between hover:shadow-md transition-all duration-300 h-full">
@@ -149,9 +149,9 @@ const DashboardOverview = () => {
                 })}
             </div>
 
-            
+
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                
+
                 <div className="bg-[#2a2a2a] p-8 rounded-[32px] shadow-sm border border-[#3a3a3a]">
                     <div className="flex items-center justify-between mb-8">
                         <div>
@@ -182,7 +182,7 @@ const DashboardOverview = () => {
                     </div>
                 </div>
 
-                
+
                 <div className="bg-[#2a2a2a] p-8 rounded-[32px] shadow-sm border border-[#3a3a3a]">
                     <div className="flex items-center justify-between mb-8">
                         <div>
@@ -213,7 +213,7 @@ const DashboardOverview = () => {
                 </div>
             </div>
 
-            
+
             <div className="bg-[#2a2a2a] border border-[#3a3a3a] p-8 rounded-[32px] shadow-sm">
                 <div className="flex items-center gap-3 mb-6">
                     <div className="w-10 h-10 bg-red-900/20 rounded-xl flex items-center justify-center">

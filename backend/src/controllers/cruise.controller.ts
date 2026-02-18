@@ -215,7 +215,7 @@ export const createCruiseHistory = asyncHandler(async (req: Request, res: Respon
                 extraRevenue: 0,
                 cleaningStaffCost: financials.cleaningStaffCost,
                 foodStaffCost: financials.foodStaffCost,
-                // @ts-expect-error: Missing in generated type
+                
                 eventStaffCost: financials.eventStaffCost,
                 externalActivityCost: financials.externalActivityCost,
                 totalExpenses: financials.totalExpenses
@@ -274,7 +274,7 @@ export const updateCruiseHistory = asyncHandler(async (req: Request, res: Respon
                     roomsBookedNormal: safeNumber(roomsBookedNormal),
                     cleaningStaffCount: financials.cleaningStaffCount,
                     foodStaffCount: financials.foodStaffCount,
-                    // @ts-expect-error: Missing in generated type
+               
                     eventStaffCount: financials.eventStaffCount,
                     staff: {
                         set: [],
@@ -288,7 +288,6 @@ export const updateCruiseHistory = asyncHandler(async (req: Request, res: Respon
                     totalRevenue: financials.totalTicketRevenue,
                     cleaningStaffCost: financials.cleaningStaffCost,
                     foodStaffCost: financials.foodStaffCost,
-                    // @ts-expect-error: Missing in generated type
                     eventStaffCost: financials.eventStaffCost,
                     externalActivityCost: financials.externalActivityCost,
                     totalExpenses: financials.totalExpenses

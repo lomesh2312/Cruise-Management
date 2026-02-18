@@ -92,6 +92,18 @@ const Login = () => {
                 </form>
             </div>
             <p className="mt-10 text-[#a0a0a0] text-xs font-bold uppercase tracking-[0.2em]">Authorized Personnel Only</p>
+
+            <div className="mt-8 w-full max-w-md text-center">
+                <p className="text-[#b8935e] text-xs font-black uppercase tracking-[0.2em] mb-3">Test Credentials</p>
+                <div className="bg-[#2a2a2a] border border-[#3a3a3a] rounded-xl px-6 py-4 space-y-2">
+                    <p className="text-[#a0a0a0] text-sm font-medium">
+                        <span className="text-[#e5e5e5] font-bold">Email:</span> admin@cruise.com
+                    </p>
+                    <p className="text-[#a0a0a0] text-sm font-medium">
+                        <span className="text-[#e5e5e5] font-bold">Password:</span> admin123
+                    </p>
+                </div>
+            </div>
         </div>
     );
 };

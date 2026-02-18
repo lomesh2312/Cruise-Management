@@ -21,28 +21,23 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 app.use(express.json());
 
-
+// Routes
 app.use('/api/auth', authRoutes);
-
-
 app.use('/api', authMiddleware);
-
 
 app.get('/api/dashboard/stats', getDashboardStats);
 app.get('/api/dashboard/monthly-revenue', getMonthlyRevenue);
-
 
 app.get('/api/rooms', getAllRooms);
 app.post('/api/rooms', createRoom);
 app.put('/api/rooms/:id', updateRoom);
 app.delete('/api/rooms/:id', deleteRoom);
 
-
 app.get('/api/room-categories', getAllCategories);
 app.put('/api/room-categories/:id', updateCategory);
-
 
 app.get('/api/cruises', getAllCruiseTrips);
 app.post('/api/cruises/history', createCruiseHistory);
@@ -52,27 +47,22 @@ app.get('/api/cruises/:id', getCruiseDetails);
 app.post('/api/cruises', createCruise);
 app.delete('/api/cruises/:id', deleteCruise);
 
-
 app.get('/api/staff', getAllStaff);
 app.post('/api/staff', createStaff);
 app.put('/api/staff/:id', updateStaff);
 app.delete('/api/staff/:id', removeStaff);
-
 
 app.get('/api/activities', getAllActivities);
 app.post('/api/activities', createActivity);
 app.put('/api/activities/:id', updateActivity);
 app.delete('/api/activities/:id', deleteActivity);
 
-
 app.use((req, res, next) => {
     console.log(`${req.method} ${req.path}`);
     next();
 });
 
-
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 app.use((err: any, req: express.Request, res: express.Response, _next: express.NextFunction) => {
     console.error('Error:', err);
     const statusCode = err instanceof AppError ? err.statusCode : 500;

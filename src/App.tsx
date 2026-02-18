@@ -1,4 +1,5 @@
 
+import cruiseVideo from './assets/cruise1.mp4';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './components/Layout/MainLayout';
 import DashboardOverview from './pages/DashboardOverview';
@@ -52,13 +53,21 @@ const HomeLoader = () => {
       <h1 className="text-7xl font-black tracking-tighter z-10 text-center mb-10 leading-none">OUR CRUISE<br />OUR PRIDE</h1>
       <a
         href='/login'
-        className="px-10 py-5 bg-white text-black font-black uppercase tracking-widest hover:bg-black hover:text-white border-2 border-white transition-all z-10 shadow-[0_0_50px_rgba(255,255,255,0.2)]"
+        className="px-10 py-5 text-black font-black uppercase tracking-widest hover:bg-white border-2 border-white transition-all z-10 shadow-[0_0_50px_rgba(255,255,255,0.2)]"
       >
         Manage Cruise
       </a>
 
-      <div id="video" className="absolute inset-0 opacity-40 grayscale pointer-events-none">
-        <img src="https://images.unsplash.com/photo-1548574505-5e239809ee19?q=80&w=3064&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Cruise Background" className="w-full h-full object-cover" />
+      <div id="video" className="absolute inset-0 opacity-40 pointer-events-none">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src={cruiseVideo} type="video/mp4" />
+        </video>
       </div>
     </div>
   );
