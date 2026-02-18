@@ -4,6 +4,10 @@
             "source": "/((?!api|.*\\..*).*)",
             "destination": "/index.html"
         }
-    ],
-    "comment": "Triggering LFS fetch"
-}
+    "rewrites": [
+            {
+                "source": "/((?!api|.*\\..*).*)",
+                "destination": "/index.html"
+            }
+        ]
+    }
