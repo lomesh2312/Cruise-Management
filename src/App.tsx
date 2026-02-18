@@ -1,5 +1,6 @@
 
-import cruiseVideo from './assets/cruise1.mp4';
+
+
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './components/Layout/MainLayout';
 import DashboardOverview from './pages/DashboardOverview';
@@ -66,7 +67,7 @@ const HomeLoader = () => {
           playsInline
           className="w-full h-full object-cover"
         >
-          <source src={cruiseVideo} type="video/mp4" />
+          <source src="/cruise1.mp4" type="video/mp4" />
         </video>
       </div>
     </div>
