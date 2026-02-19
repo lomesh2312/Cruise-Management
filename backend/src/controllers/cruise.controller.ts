@@ -196,7 +196,7 @@ export const createCruiseHistory = asyncHandler(async (req: Request, res: Respon
         registered: safeNumber(totalPassengers),
         totalPassengers: safeNumber(totalPassengers),
         status: end < new Date() ? 'COMPLETED' : start > new Date() ? 'UPCOMING' : 'ONGOING',
-        isArchived: false,
+        isArchived: end < new Date(),
         passengersDeluxe: safeNumber(passengersDeluxe),
         passengersPremiumGold: safeNumber(passengersPremiumGold),
         passengersPremiumSilver: safeNumber(passengersPremiumSilver),
@@ -215,7 +215,7 @@ export const createCruiseHistory = asyncHandler(async (req: Request, res: Respon
                 extraRevenue: 0,
                 cleaningStaffCost: financials.cleaningStaffCost,
                 foodStaffCost: financials.foodStaffCost,
-                
+
                 eventStaffCost: financials.eventStaffCost,
                 externalActivityCost: financials.externalActivityCost,
                 totalExpenses: financials.totalExpenses
@@ -264,6 +264,7 @@ export const updateCruiseHistory = asyncHandler(async (req: Request, res: Respon
                     registered: safeNumber(totalPassengers),
                     totalPassengers: safeNumber(totalPassengers),
                     status: end < new Date() ? 'COMPLETED' : start > new Date() ? 'UPCOMING' : 'ONGOING',
+                    isArchived: end < new Date(),
                     passengersDeluxe: safeNumber(passengersDeluxe),
                     passengersPremiumGold: safeNumber(passengersPremiumGold),
                     passengersPremiumSilver: safeNumber(passengersPremiumSilver),
@@ -274,7 +275,7 @@ export const updateCruiseHistory = asyncHandler(async (req: Request, res: Respon
                     roomsBookedNormal: safeNumber(roomsBookedNormal),
                     cleaningStaffCount: financials.cleaningStaffCount,
                     foodStaffCount: financials.foodStaffCount,
-               
+
                     eventStaffCount: financials.eventStaffCount,
                     staff: {
                         set: [],

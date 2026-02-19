@@ -96,7 +96,7 @@ const GenerateTrip = () => {
     const handleCreateTrip = async (formData: TripFormData) => {
         setIsSubmitting(true);
         try {
-            await api.post('/cruises', formData);
+            await api.post('/cruises/history', formData);
             alert('Trip created successfully!');
             await loadData();
             setIsFormOpen(false);
@@ -113,7 +113,7 @@ const GenerateTrip = () => {
         if (!editingTrip) return;
         setIsSubmitting(true);
         try {
-            await api.put(`/cruises/${editingTrip.id}`, formData);
+            await api.put(`/cruises/${editingTrip.id}/history`, formData);
             alert('Trip updated successfully!');
             await loadData();
             setIsFormOpen(false);
@@ -204,7 +204,7 @@ const GenerateTrip = () => {
                 </button>
             </div>
 
-            
+
             <div className="grid grid-cols-1 gap-6">
                 {trips.length === 0 ? (
                     <div className="text-center py-20 bg-[#333333] dark:bg-gray-800 rounded-3xl border border-dashed border-gray-200 dark:border-gray-700">
@@ -308,7 +308,7 @@ const GenerateTrip = () => {
                 )}
             </div>
 
-            
+
             {isFormOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#b8935e]/50 backdrop-blur-sm animate-in fade-in duration-200">
                     <div className="bg-[#2a2a2a] dark:bg-gray-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[32px] shadow-2xl animate-in zoom-in-95 duration-200">
